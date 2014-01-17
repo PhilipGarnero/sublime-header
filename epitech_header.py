@@ -37,6 +37,7 @@ class HeaderUpdater(sublime_plugin.EventListener):
           view.end_edit(edit)
 
 
+
 class Header():
   #
   # /!\ Find how to get this from system!
@@ -137,3 +138,18 @@ class HeaderCommand(sublime_plugin.TextCommand):
 
   def run(self, edit, project):
     self.view.insert(edit, 0, self.generate(project))
+
+class ProtectedHeaderMaker(sublime_plugin.EventListener):
+  def on_pre_save(self, view):
+    try:
+      edit = view.begin_edit()
+      filename = Header(view).get_file_infos()[0]
+      filename, fileExtension = os.path.splitext(filename)
+      filename = "{0}_H_".format(filename).upper()
+      if fileExtension == ".hh" or fileExtension == ".h":
+        if view.find("#ifndef", 0) == None:
+          view.insert(edit, view.size(), "\n#ifndef {0}\n# define {0}\n\n\n\n#endif /* {0} */".format(filename))
+    except Exception as e:
+      print e
+    finally:
+      view.end_edit(edit)
