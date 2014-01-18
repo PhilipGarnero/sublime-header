@@ -100,7 +100,7 @@ class Header():
     # - replace 03 by  3
     # - get day and month in english
 
-    return time.strftime("%a %b  %d %H:%M:%S %Y")
+    return time.strftime("%a %b %d %H:%M:%S %Y")
 
 #
 # Main class: create the epitech-style header.
